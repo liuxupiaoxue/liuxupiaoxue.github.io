@@ -319,60 +319,16 @@
 
       
         
-          
-            <h2 id="Dalvik虚拟机简介"><a href="#Dalvik虚拟机简介" class="headerlink" title="Dalvik虚拟机简介"></a>Dalvik虚拟机简介</h2><p>目前Android虚拟机主要分为两种：Dalvik和ART。ART是Dalvik的改进版本，其大部分功能与Dalvik虚拟机相似，所以本文主要介绍Dalvik虚拟机，同时也会与其它虚拟机做一个比较。  </p>
+          <h2 id="Dalvik虚拟机简介"><a href="#Dalvik虚拟机简介" class="headerlink" title="Dalvik虚拟机简介"></a>Dalvik虚拟机简介</h2><p>目前Android虚拟机主要分为两种：Dalvik和ART。ART是Dalvik的改进版本，其大部分功能与Dalvik虚拟机相似，所以本文主要介绍Dalvik虚拟机，同时也会与其它虚拟机做一个比较。</p>
 <p>在介绍Dalvik之前首先的介绍一下JVM（Java虚拟机）。JVM是一种用于计算设备的规范，它是一个虚构出来的计算机，是通过在实际的计算机上仿真模拟各种计算机功能来实现的。一般来讲不同平台（如Windows、Linux）的硬件设备底层差别很大，所以一般高级语言需要在不同的平台上运行，需要编译成不同的目标机器码。JVM屏蔽了与具体平台的相关信息，将不同平台的底层封装成统一的上层访问形式，所以在JVM上运行的语言（Java、Groovy、Scala、Kotlin等）在不同平台上运行不需要重新编译，只需要将代码编译成与平台无关的字节码（.class文件类型），即可在不同平台的JVM上被JVM解释执行。JVM不只有一种，所有遵循<em>Java虚拟机规范</em>而设计的虚拟机都是JVM（如HotSpot、J9 VM等）。 </p>
-<p>Dalvik是Google公司设计用于Android平台的虚拟机。Dalvik虚拟机是Google等厂商合作开发的Android移动设备平台的核心组成部分之一。严格来讲，Dalvik不是Java虚拟机的一种，因为它没有完全遵循<em>Java虚拟机规范</em>，Dalvik设计的目的不是为了跨平台，而是为了使用Java语言编写的Android APP更好的运行的Android设备中。Dalvik不直接运行Java语言编译出来的字节码文件（.class文件），而是需要将一个应用的所有class文件再重新优化打包成为一个.dex文件，这样才在Dalvik虚拟机上运行。Dalvik在Android设备上是多实例的，每一个Android进程即对应一个Dalvik虚拟机，每一个虚拟机实例作为一个独立的Linux进程执行。独立的进程可以防止在虚拟机崩溃的时候所有程序都被关闭。</p>
-<h2 id="Dalvik与JVM比较"><a href="#Dalvik与JVM比较" class="headerlink" title="Dalvik与JVM比较"></a>Dalvik与JVM比较</h2><ul>
-<li><h4 id="两者最主要的区别：Dalvik是基于寄存器的，而JVM是基于栈的。"><a href="#两者最主要的区别：Dalvik是基于寄存器的，而JVM是基于栈的。" class="headerlink" title="两者最主要的区别：Dalvik是基于寄存器的，而JVM是基于栈的。"></a>两者最主要的区别：Dalvik是基于寄存器的，而JVM是基于栈的。</h4><p>  虚拟机是借助于操作系统对物理机器的一种模拟，虚拟机为了能够执行字节码，需要模拟出物理CPU能够执行的相关操作。而CUP需要在进行计算时，主要的操作有：</p>
-<ul>
-<li>获取一条指令</li>
-<li>对操作数进行解码</li>
-<li><p>执行这条指令  </p>
-<p>基于栈的虚拟机在进行计算时只能在程序运行的栈帧的操作数栈获取操作数和将，下面是基于栈的虚拟机执行 c = a + b 这个计算的简要步骤：</p>
-</li>
-<li>CPU在局部变量表获取a的值，压入操作数栈</li>
-<li>CPU在局部变量表获取b的值，压入操作数栈</li>
-<li>CPU从操作数栈弹出顶部两个操作数，执行求和指令，将结果压入操作数栈</li>
-<li><p>CPU将操作数栈顶操作数弹出赋值给c </p>
-<p>流程图如下：<img src="1.png" alt="image"> </p>
-<p>基于寄存器的虚拟机在计算时，直接从栈帧的虚拟寄存器读取操作数，无需执行大量的出栈入栈操作。下面是基于寄存器的虚拟机执行 c = a + b 这个计算的简要步骤</p>
-</li>
-<li>CPU在虚拟寄存器分别获取a，b的值，然后执行求和指令</li>
-<li><p>将求和结果赋值给寄存器的c变量  </p>
-<p>流程图如下：<img src="2.png" alt="image"> </p>
-<p>使用寄存器式虚拟机没有基于栈的虚拟机在拷贝数据而使用的大量的出入栈（push/pop）指令，所以在运行速度上基于寄存器的虚拟机会快一些，同时指令更紧凑更简洁。Dalvik在提升速度的同时，牺牲的是虚拟机的可移植性，但是Dalvik的虚拟机只运行在Android系统上，所以这一点并不影响。</p>
-</li>
-</ul>
-</li>
-<li><h4 id="Dalvik-和-Java-字节码的区别"><a href="#Dalvik-和-Java-字节码的区别" class="headerlink" title="Dalvik 和 Java 字节码的区别"></a>Dalvik 和 Java 字节码的区别</h4>  Dalvik执行.dex格式的字节码，而JVM执行.class格式的字节码。.dex字节码和.class字节码的区别和联系如下:<ul>
-<li>.dex是由.class字节码优化而来的，编译器先将java代码编译成多个.class字节码文件，然后经过编译器进一步编译优化后得到一个.dex文件。一般情况下一个Android的APP只会有一个.dex文件，如果应用中的Dex 文件方法数超过了最大值65536，则可以分多个.dex文件。</li>
-<li>java类文件在编译过后，产生的.class文件包含大量陈余信息，dex文件格式会把所有的.class文件内容整合到一个.dex文件中。即减少了整体文件的尺寸和IO操作，也提高了类的查找速度。 </li>
-</ul>
-</li>
-<li><h4 id="Dalvik-和-Java-运行环境的区别"><a href="#Dalvik-和-Java-运行环境的区别" class="headerlink" title="Dalvik 和 Java 运行环境的区别"></a>Dalvik 和 Java 运行环境的区别</h4>  Dalvik 经过优化，允许在有限的内存中同时运行多个虚拟机的实例，并且每一个Dalvik应用作为一个独立的Linux进程执行。独立的进程可以防止在虚拟机崩溃的时候所有程序都被关闭。</li>
-<li><h4 id="优化后的Dalvik较其他标准JVM的一些不同特性"><a href="#优化后的Dalvik较其他标准JVM的一些不同特性" class="headerlink" title="优化后的Dalvik较其他标准JVM的一些不同特性"></a>优化后的Dalvik较其他标准JVM的一些不同特性</h4><ul>
-<li>占用更少空间　</li>
-<li>为简化翻译，常量池只使用32位索引　　</li>
-<li>标准Java字节码实行8位堆栈指令,Dalvik使用16位指令集直接作用于局部变量。局部变量通常来自4位的“虚拟寄存器”区。这样减少了Dalvik的指令计数，提高了翻译速度。</li>
-</ul>
-</li>
-</ul>
-<h2 id="Dalvik与ART比较"><a href="#Dalvik与ART比较" class="headerlink" title="Dalvik与ART比较"></a>Dalvik与ART比较</h2><p>ART即Android Runtime，是Google公司发布的用来替代Dalvik的虚拟机，目前Android4.4及以上的机器可以使用ART。ART 的机制与 Dalvik 不同。在Dalvik下，应用每次运行的时候，字节码都需要通过即时编译器（just in time ，JIT）转换为机器码，这会拖慢应用的运行效率，而在ART 环境中，应用在第一次安装的时候，字节码就会预先编译成机器码，使其成为真正的本地应用。这个过程叫做预编译（AOT,Ahead-Of-Time）。这样的话，应用的启动(首次)和执行都会变得更加快速。</p>
-<h4 id="ART与Dalvik相比的优点："><a href="#ART与Dalvik相比的优点：" class="headerlink" title="ART与Dalvik相比的优点："></a>ART与Dalvik相比的优点：</h4><ul>
-<li>系统性能的显著提升。</li>
-<li>应用启动更快、运行更快、体验更流畅、触感反馈更及时。</li>
-<li>更长的电池续航能力。</li>
-<li>支持更低的硬件。<h4 id="ART与Dalvik相比的缺点："><a href="#ART与Dalvik相比的缺点：" class="headerlink" title="ART与Dalvik相比的缺点："></a>ART与Dalvik相比的缺点：</h4></li>
-<li>机器码占用的存储空间更大，字节码变为机器码之后，可能会增加10%-20%。</li>
-<li>应用的安装时间会变长。<h2 id="Dalvik垃圾回收（GC）"><a href="#Dalvik垃圾回收（GC）" class="headerlink" title="Dalvik垃圾回收（GC）"></a>Dalvik垃圾回收（GC）</h2><h4 id="Dalivik堆"><a href="#Dalivik堆" class="headerlink" title="Dalivik堆:"></a>Dalivik堆:</h4>所有的java对象都是在Dalivik堆上面申请的， Dalivik堆分为两部分。Active Heap 和 Zygote Heap。 Android系统启动后，会有一个Zygote进程创建第一个Dalvik虚拟机，以后的Android应用程序在启动的时候是被Zygote进程fork出来的，在fork进程的时候，系统会把Zygote进程的Zygote Heap也fork到新的进程。Zygote Heap堆里面分配的对象其实主要就是Zygote进程在启动过程中预加载的类、资源和对象了。这意味着这些预加载的类、资源和对象可以在Zygote进程和应用程序进程中做到长期共享。<h4 id="垃圾收集过程"><a href="#垃圾收集过程" class="headerlink" title="垃圾收集过程"></a>垃圾收集过程</h4>Dalvi垃圾回主要针对Active Heap中的对象，采用Mark-Sweep算法。在垃圾收集的Mark阶段，要求除了垃圾收集线程之外，其它的线程都停止（Stop The World），否则如果对象在GC过程中又引用了其他对象，就会可能导致不能正确地标记每一个对象。然而，这将造成程序卡顿，效率降低。所以必须允许在Mark阶段使垃圾回收线程和其他线程可以并发执行（Concurrent GC）。为了实现此目的，Dalvik将Mark阶段划分为四步：</li>
-<li>停止非GC线程，只标记根集对象，即在GC过程开始的时刻，那些被全局变量，栈变量，寄存器对象引用的对象。这个阶段只允许GC线程运行，防止这些根集对象在这个过程中再去引用其他对象。</li>
-<li>唤醒非其它非GC线程，通过第一步标记的根集对象引用关系，可以找到并标记其他正在使用的对象。为了实现GC线程与其他线程并发，需要把其他线程对对象的修改记录下来，记录这些修改的数据结构被称为Card Table。</li>
-<li>再次停止非GC线程；利用Card Table的信息再次进行一个mark操作，因为此时Card Table<br>的数据量比较小，所以这一次的mark操作比第一个mark操作要快得多。</li>
-<li>将堆中的数据全部标记完成后，执行Sweep操作。</li>
-</ul>
-
-          
+<p>Dalvik是Google公司设计用于Android平台的虚拟机。Dalvik虚拟机是Google等厂商合作开发的Android移动设备平台的核心组成部分之一。严格来讲，Dalvik不是Java虚拟机的一种，因为它没有完全遵循<em>Java虚拟机规范</em>，Dalvik设计的目的不是为了跨平台，而是为了使用Java语言编写的Android APP更好的运行的Android设备中。Dalvik不直接运行Java语言编译出来的字节码文件（.class文件），而是需要将一个应用的所有class文件再重新优化打包成为一个.dex文件，这样才在Dalvik虚拟机上运行。Dalvik在Android设备上是多实例的，每一个Android进程即对应一个Dalvik虚拟机，每一个虚拟机实例作为一个独立的Linux进程执行。独立的进程可以防止在虚拟机崩溃的时候所有程序都被关闭。<br>
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2018/12/02/浅析Android虚拟机/#more" rel="contents">
+              Read more &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
         
       
     </div>
