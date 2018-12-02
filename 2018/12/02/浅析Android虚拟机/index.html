@@ -79,13 +79,20 @@
 
 
 
-<meta property="og:type" content="website">
-<meta property="og:title" content="liuxu&#39;s blogs">
-<meta property="og:url" content="http://yoursite.com/index.html">
+<meta name="description" content="Dalvik虚拟机简介目前Android虚拟机主要分为两种：Dalvik和ART。ART是Dalvik的改进版本，其大部分功能与Dalvik虚拟机相似，所以本文主要介绍Dalvik虚拟机，同时也会与其它虚拟机做一个比较。   在介绍Dalvik之前首先的介绍一下JVM（Java虚拟机）。JVM是一种用于计算设备的规范，它是一个虚构出来的计算机，是通过在实际的计算机上仿真模拟各种计算机功能来实现的。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="浅析Android虚拟机">
+<meta property="og:url" content="http://yoursite.com/2018/12/02/浅析Android虚拟机/index.html">
 <meta property="og:site_name" content="liuxu&#39;s blogs">
+<meta property="og:description" content="Dalvik虚拟机简介目前Android虚拟机主要分为两种：Dalvik和ART。ART是Dalvik的改进版本，其大部分功能与Dalvik虚拟机相似，所以本文主要介绍Dalvik虚拟机，同时也会与其它虚拟机做一个比较。   在介绍Dalvik之前首先的介绍一下JVM（Java虚拟机）。JVM是一种用于计算设备的规范，它是一个虚构出来的计算机，是通过在实际的计算机上仿真模拟各种计算机功能来实现的。">
 <meta property="og:locale" content="default">
+<meta property="og:image" content="http://yoursite.com/2018/12/02/浅析Android虚拟机/1.png">
+<meta property="og:image" content="http://yoursite.com/2018/12/02/浅析Android虚拟机/2.png">
+<meta property="og:updated_time" content="2018-12-02T15:03:26.059Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="liuxu&#39;s blogs">
+<meta name="twitter:title" content="浅析Android虚拟机">
+<meta name="twitter:description" content="Dalvik虚拟机简介目前Android虚拟机主要分为两种：Dalvik和ART。ART是Dalvik的改进版本，其大部分功能与Dalvik虚拟机相似，所以本文主要介绍Dalvik虚拟机，同时也会与其它虚拟机做一个比较。   在介绍Dalvik之前首先的介绍一下JVM（Java虚拟机）。JVM是一种用于计算设备的规范，它是一个虚构出来的计算机，是通过在实际的计算机上仿真模拟各种计算机功能来实现的。">
+<meta name="twitter:image" content="http://yoursite.com/2018/12/02/浅析Android虚拟机/1.png">
 
 
 
@@ -115,13 +122,13 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/"/>
+  <link rel="canonical" href="http://yoursite.com/2018/12/02/浅析Android虚拟机/"/>
 
 
 
 
 
-  <title>liuxu's blogs</title>
+  <title>浅析Android虚拟机 | liuxu's blogs</title>
   
 
 
@@ -140,8 +147,7 @@
     
   
 
-  <div class="container sidebar-position-left 
-  page-home">
+  <div class="container sidebar-position-left page-post-detail">
     <div class="headband"></div>
 
     <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
@@ -234,9 +240,9 @@
         <div class="content-wrap">
           <div id="content" class="content">
             
-  <section id="posts" class="posts-expand">
+
+  <div id="posts" class="posts-expand">
     
-      
 
   
 
@@ -266,9 +272,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/12/02/浅析Android虚拟机/" itemprop="url">浅析Android虚拟机</a></h1>
+          <h1 class="post-title" itemprop="name headline">浅析Android虚拟机</h1>
         
 
         <div class="post-meta">
@@ -318,9 +322,7 @@
       
 
       
-        
-          
-            <h2 id="Dalvik虚拟机简介"><a href="#Dalvik虚拟机简介" class="headerlink" title="Dalvik虚拟机简介"></a>Dalvik虚拟机简介</h2><p>目前Android虚拟机主要分为两种：Dalvik和ART。ART是Dalvik的改进版本，其大部分功能与Dalvik虚拟机相似，所以本文主要介绍Dalvik虚拟机，同时也会与其它虚拟机做一个比较。  </p>
+        <h2 id="Dalvik虚拟机简介"><a href="#Dalvik虚拟机简介" class="headerlink" title="Dalvik虚拟机简介"></a>Dalvik虚拟机简介</h2><p>目前Android虚拟机主要分为两种：Dalvik和ART。ART是Dalvik的改进版本，其大部分功能与Dalvik虚拟机相似，所以本文主要介绍Dalvik虚拟机，同时也会与其它虚拟机做一个比较。  </p>
 <p>在介绍Dalvik之前首先的介绍一下JVM（Java虚拟机）。JVM是一种用于计算设备的规范，它是一个虚构出来的计算机，是通过在实际的计算机上仿真模拟各种计算机功能来实现的。一般来讲不同平台（如Windows、Linux）的硬件设备底层差别很大，所以一般高级语言需要在不同的平台上运行，需要编译成不同的目标机器码。JVM屏蔽了与具体平台的相关信息，将不同平台的底层封装成统一的上层访问形式，所以在JVM上运行的语言（Java、Groovy、Scala、Kotlin等）在不同平台上运行不需要重新编译，只需要将代码编译成与平台无关的字节码（.class文件类型），即可在不同平台的JVM上被JVM解释执行。JVM不只有一种，所有遵循<em>Java虚拟机规范</em>而设计的虚拟机都是JVM（如HotSpot、J9 VM等）。 </p>
 <p>Dalvik是Google公司设计用于Android平台的虚拟机。Dalvik虚拟机是Google等厂商合作开发的Android移动设备平台的核心组成部分之一。严格来讲，Dalvik不是Java虚拟机的一种，因为它没有完全遵循<em>Java虚拟机规范</em>，Dalvik设计的目的不是为了跨平台，而是为了使用Java语言编写的Android APP更好的运行的Android设备中。Dalvik不直接运行Java语言编译出来的字节码文件（.class文件），而是需要将一个应用的所有class文件再重新优化打包成为一个.dex文件，这样才在Dalvik虚拟机上运行。Dalvik在Android设备上是多实例的，每一个Android进程即对应一个Dalvik虚拟机，每一个虚拟机实例作为一个独立的Linux进程执行。独立的进程可以防止在虚拟机崩溃的时候所有程序都被关闭。</p>
 <h2 id="Dalvik与JVM比较"><a href="#Dalvik与JVM比较" class="headerlink" title="Dalvik与JVM比较"></a>Dalvik与JVM比较</h2><ul>
@@ -372,8 +374,6 @@
 <li>将堆中的数据全部标记完成后，执行Sweep操作。</li>
 </ul>
 
-          
-        
       
     </div>
     
@@ -390,12 +390,12 @@
       
 
       
+      
+      
 
       
 
       
-      
-        <div class="post-eof"></div>
       
     </footer>
   </div>
@@ -405,10 +405,11 @@
   </article>
 
 
-    
-  </section>
 
-  
+    <div class="post-spread">
+      
+    </div>
+  </div>
 
 
           </div>
@@ -416,6 +417,10 @@
 
 
           
+
+  
+
+
 
         </div>
         
@@ -436,8 +441,17 @@
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            Overview
+          </li>
+        </ul>
+      
 
-      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
+      <section class="site-overview-wrap sidebar-panel">
         <div class="site-overview">
           <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
             
@@ -497,6 +511,22 @@
         </div>
       </section>
 
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Dalvik虚拟机简介"><span class="nav-number">1.</span> <span class="nav-text">Dalvik虚拟机简介</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Dalvik与JVM比较"><span class="nav-number">2.</span> <span class="nav-text">Dalvik与JVM比较</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#两者最主要的区别：Dalvik是基于寄存器的，而JVM是基于栈的。"><span class="nav-number">2.0.1.</span> <span class="nav-text">两者最主要的区别：Dalvik是基于寄存器的，而JVM是基于栈的。</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Dalvik-和-Java-字节码的区别"><span class="nav-number">2.0.2.</span> <span class="nav-text">Dalvik 和 Java 字节码的区别</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Dalvik-和-Java-运行环境的区别"><span class="nav-number">2.0.3.</span> <span class="nav-text">Dalvik 和 Java 运行环境的区别</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#优化后的Dalvik较其他标准JVM的一些不同特性"><span class="nav-number">2.0.4.</span> <span class="nav-text">优化后的Dalvik较其他标准JVM的一些不同特性</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Dalvik与ART比较"><span class="nav-number">3.</span> <span class="nav-text">Dalvik与ART比较</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#ART与Dalvik相比的优点："><span class="nav-number">3.0.1.</span> <span class="nav-text">ART与Dalvik相比的优点：</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#ART与Dalvik相比的缺点："><span class="nav-number">3.0.2.</span> <span class="nav-text">ART与Dalvik相比的缺点：</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Dalvik垃圾回收（GC）"><span class="nav-number">4.</span> <span class="nav-text">Dalvik垃圾回收（GC）</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Dalivik堆"><span class="nav-number">4.0.1.</span> <span class="nav-text">Dalivik堆:</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#垃圾收集过程"><span class="nav-number">4.0.2.</span> <span class="nav-text">垃圾收集过程</span></a></li></ol></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
       
 
       
@@ -637,6 +667,10 @@
 
 
   
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
 
   
 
